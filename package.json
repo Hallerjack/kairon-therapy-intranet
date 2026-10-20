@@ -1,0 +1,28 @@
+{
+  "name": "kairon-therapy-api",
+  "version": "1.0.0",
+  "description": "Backend API - Sistema de Gestión Clínica KaironTherapy",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "seed": "node scripts/seed-usuarios.js",
+    "migrate:especialidades": "node scripts/migrate-especialidades.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "mysql2": "^3.6.5",
+    "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

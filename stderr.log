@@ -1,0 +1,115 @@
+Error: Origen no permitido por CORS
+    at /home/kairont1/kairontherapy/src/app.js:34:23
+    at corsMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:328:13)
+    at /home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:558:6)
+    at xXssProtectionMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:338:3)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:556:6)
+Error: Origen no permitido por CORS
+    at /home/kairont1/kairontherapy/src/app.js:34:23
+    at corsMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:328:13)
+    at /home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:558:6)
+    at xXssProtectionMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:338:3)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:556:6)
+Error: Origen no permitido por CORS
+    at /home/kairont1/kairontherapy/src/app.js:34:23
+    at corsMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:328:13)
+    at /home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:558:6)
+    at xXssProtectionMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:338:3)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:556:6)
+Error: Origen no permitido por CORS
+    at /home/kairont1/kairontherapy/src/app.js:34:23
+    at corsMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:328:13)
+    at /home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:558:6)
+    at xXssProtectionMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:338:3)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:556:6)
+Error: Origen no permitido por CORS
+    at /home/kairont1/kairontherapy/src/app.js:34:23
+    at corsMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:328:13)
+    at /home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:558:6)
+    at xXssProtectionMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:338:3)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:556:6)
+Error: Origen no permitido por CORS
+    at /home/kairont1/kairontherapy/src/app.js:34:23
+    at corsMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/cors/lib/index.js:204:7)
+    at Layer.handle [as handle_request] (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:328:13)
+    at /home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/express/lib/router/index.js:280:10)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:558:6)
+    at xXssProtectionMiddleware (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:338:3)
+    at internalNext (/home/kairont1/nodevenv/kairontherapy/22/lib/node_modules/helmet/index.cjs:556:6)
+Error [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames: Host: localhost. is not in the cert's altnames: DNS:planetacl104166.dedicados.cl
+    at Object.checkServerIdentity (node:tls:462:12)
+    at TLSSocket.onConnectSecure (node:internal/tls/wrap:1793:27)
+    at TLSSocket.emit (node:events:519:28)
+    at TLSSocket._finishInit (node:internal/tls/wrap:1176:8)
+    at ssl.onhandshakedone (node:internal/tls/wrap:962:12) {
+  code: 'ESOCKET',
+  reason: "Host: localhost. is not in the cert's altnames: DNS:planetacl104166.dedicados.cl",
+  host: 'localhost',
+  cert: {
+    subject: [Object: null prototype] { CN: 'planetacl104166.dedicados.cl' },
+    issuer: [Object: null prototype] { C: 'US', O: "Let's Encrypt", CN: 'YR2' },
+    subjectaltname: 'DNS:planetacl104166.dedicados.cl',
+    infoAccess: [Object: null prototype] { 'CA Issuers - URI': [Array] },
+    ca: false,
+    modulus: 'CACA722CC7F1B01BAAAEF672B00F0FF2D9C3CB6B1167778A5E438074407B13655AE2A7D2A7F28EF6F88F3B2DFDC8C4180CD3EAA74E8EDAF002B4094DCB53153AEA8E66A1F31CB27B262DB5F27F6922F49DD38D824380F27808C987BAF7B9F9DD008CF26AD47F360FA23A86AF0FC2D5D83B8627DF4FF85BBCFD416E4C559C5717765A3607752ACFCC93E0BC3F118FCC6A75BE35BB9D668A38CE6A82C7A640076F9601514A37B32E72290701EFCD6CAA0FE0453ECDD7C485DCE9D42110659578141C4647BA9698F7CC850924A569FC08B2CB2ABB6BC9550CA3B9FE60134F2CA5661D823E35250F12513329785E57C33D02CE18396DBA7A58F7F44461F838DF398D',
+    bits: 2048,
+    exponent: '0x10001',
+    pubkey: <Buffer 30 82 01 22 30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 03 82 01 0f 00 30 82 01 0a 02 82 01 01 00 ca ca 72 2c c7 f1 b0 1b aa ae f6 72 b0 0f 0f f2 d9 ... 244 more bytes>,
+    valid_from: 'Sep  8 05:16:00 2026 GMT',
+    valid_to: 'Dec  7 05:15:59 2026 GMT',
+    fingerprint: '7A:22:DA:E7:A4:DE:78:6F:E4:9F:E0:E9:DC:9C:51:45:8E:5C:8E:3E',
+    fingerprint256: '33:2F:58:AB:EF:2E:4B:A8:30:23:FB:F1:89:4E:B0:ED:23:7E:32:B4:97:F7:52:2D:0D:BD:2D:3F:0E:37:85:8B',
+    fingerprint512: '00:30:74:82:A5:16:92:15:5D:6C:D3:A1:19:86:DD:E9:AB:FB:BD:18:04:99:3C:7A:AF:B3:C1:D1:B1:9C:0E:63:F1:88:00:B5:EB:F2:91:8D:CA:B1:FA:24:9A:EB:BC:64:DF:38:CE:88:C3:D2:5B:D4:BF:B1:FE:AD:AE:0D:23:5E',
+    ext_key_usage: [ '1.3.6.1.5.5.7.3.1' ],
+    serialNumber: '0622535F272D280F87A504AFE9991B71C8DB',
+    raw: <Buffer 30 82 05 11 30 82 03 f9 a0 03 02 01 02 02 12 06 22 53 5f 27 2d 28 0f 87 a5 04 af e9 99 1b 71 c8 db 30 0d 06 09 2a 86 48 86 f7 0d 01 01 0b 05 00 30 33 ... 1251 more bytes>,
+    issuerCertificate: {
+      subject: [Object: null prototype],
+      issuer: [Object: null prototype],
+      infoAccess: [Object: null prototype],
+      ca: true,
+      modulus: 'D9D0BC70069A6A87CE25BAA31EAD5FDE78BFDF5D0EE62D042FD4B9E958A65BCAF1A9C7AC21E807E7B2502717A7B04E470703E8123A806F9B70DF9B4E80B86885F8A46EB787C0728C2A9C0410096F7CF903CFFDE3AFFF0BA0EC8CA4E0D90EC5FD88EA0D9FE794FA9C9A0E4CB15CBA4791ABCD091901186A7F9D3C5AFD38652040ADA118A80D916F3BA5AA69B0E02E50972BA18851B79B948ACE2A6998AB7A2B1EBB7DA0CC324D04088AB6CBDDE875F8BF6E5BA6444D712FC1FC6B5CF6455B5290FED8F2CFC5D7A2DD38A6E79938B5F0045F00F6AB288F4F1AD336AEA537E00CAF983673574DAA4393C23C5E57A2F99693F5AC6898BCB9D168F94EAB26513D6FB9',
+      bits: 2048,
+      exponent: '0x10001',
+      pubkey: <Buffer 30 82 01 22 30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 03 82 01 0f 00 30 82 01 0a 02 82 01 01 00 d9 d0 bc 70 06 9a 6a 87 ce 25 ba a3 1e ad 5f de 78 ... 244 more bytes>,
+      valid_from: 'Sep  3 00:00:00 2025 GMT',
+      valid_to: 'Sep  2 23:59:59 2028 GMT',
+      fingerprint: '2D:74:D6:DF:D9:6E:EA:55:AD:7B:AA:FA:0D:3C:65:52:B2:DA:DC:37',
+      fingerprint256: '23:8B:85:A0:09:9C:65:B9:70:47:7D:57:24:F1:A1:D4:75:CE:50:58:CF:FE:4E:FA:87:33:89:9B:DB:86:3C:47',
+      fingerprint512: 'E2:7E:24:B1:05:74:FD:1E:F9:45:05:78:CE:F8:96:AE:FD:C7:95:92:B1:40:AA:64:AF:47:F6:B9:06:76:10:26:9E:12:8E:24:BC:EA:04:49:70:24:03:77:2A:0B:2E:61:22:B2:C9:60:37:5E:3C:C8:FD:E5:89:57:8E:C1:2C:2C',
+      ext_key_usage: [Array],
+      serialNumber: '4EBD24947E24D394802D84A52FD5B319',
+      raw: <Buffer 30 82 04 da 30 82 02 c2 a0 03 02 01 02 02 10 4e bd 24 94 7e 24 d3 94 80 2d 84 a5 2f d5 b3 19 30 0d 06 09 2a 86 48 86 f7 0d 01 01 0b 05 00 30 2e 31 0b ... 1196 more bytes>,
+      issuerCertificate: [Object]
+    }
+  },
+  command: 'CONN'
+}

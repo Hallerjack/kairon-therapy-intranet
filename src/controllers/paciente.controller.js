@@ -1,0 +1,234 @@
+const db = require('../config/db');
+
+const getAll = async (req, res, next) => {
+  try {
+    let rows;
+    if (req.user.rol === 'terapeuta') {
+      [rows] = await db.query(`
+        SELECT pac.*, p.rut, p.nombres, p.apellidos, p.fecha_nacimiento, p.genero,
+               p.telefono, p.email, p.direccion, p.nacionalidad, s.nombre AS nombre_sucursal,
+               EXISTS (
+                 SELECT 1 FROM sesion ses
+                 JOIN ficha_clinica fc ON fc.id_ficha = ses.id_ficha
+                 WHERE fc.id_paciente = pac.id_paciente AND ses.estado = 'de_alta'
+               ) AS de_alta
+        FROM paciente pac
+        JOIN persona  p ON p.id_persona  = pac.id_persona
+        JOIN sucursal s ON s.id_sucursal = pac.id_sucursal
+        WHERE pac.id_sucursal IN (
+          SELECT id_sucursal FROM terapeuta_sucursal
+          WHERE id_terapeuta = ? AND (fecha_fin IS NULL OR fecha_fin > CURDATE())
+        )
+        ORDER BY p.apellidos, p.nombres
+      `, [req.user.id_terapeuta]);
+    } else {
+      [rows] = await db.query(`
+        SELECT pac.*, p.rut, p.nombres, p.apellidos, p.fecha_nacimiento, p.genero,
+               p.telefono, p.email, p.direccion, p.nacionalidad, s.nombre AS nombre_sucursal,
+               EXISTS (
+                 SELECT 1 FROM sesion ses
+                 JOIN ficha_clinica fc ON fc.id_ficha = ses.id_ficha
+                 WHERE fc.id_paciente = pac.id_paciente AND ses.estado = 'de_alta'
+               ) AS de_alta
+        FROM paciente pac
+        JOIN persona  p ON p.id_persona   = pac.id_persona
+        JOIN sucursal s ON s.id_sucursal  = pac.id_sucursal
+        ORDER BY p.apellidos, p.nombres
+      `);
+    }
+    res.json(rows);
+  } catch (err) { next(err); }
+};
+
+const getById = async (req, res, next) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT pac.*, p.rut, p.nombres, p.apellidos, p.fecha_nacimiento, p.genero,
+             p.telefono, p.email, p.direccion, p.nacionalidad, s.nombre AS nombre_sucursal,
+             EXISTS (
+               SELECT 1 FROM sesion ses
+               JOIN ficha_clinica fc ON fc.id_ficha = ses.id_ficha
+               WHERE fc.id_paciente = pac.id_paciente AND ses.estado = 'de_alta'
+             ) AS de_alta
+      FROM paciente pac
+      JOIN persona  p ON p.id_persona  = pac.id_persona
+      JOIN sucursal s ON s.id_sucursal = pac.id_sucursal
+      WHERE pac.id_paciente = ?
+    `, [req.params.id]);
+    if (!rows.length) return res.status(404).json({ error: 'Paciente no encontrado' });
+    if (req.user.rol === 'terapeuta') {
+      const [asig] = await db.query(
+        `SELECT 1 FROM terapeuta_sucursal
+         WHERE id_terapeuta = ? AND id_sucursal = ?
+           AND (fecha_fin IS NULL OR fecha_fin > CURDATE())`,
+        [req.user.id_terapeuta, rows[0].id_sucursal]
+      );
+      if (!asig.length) return res.status(403).json({ error: 'Acceso denegado' });
+    }
+    res.json(rows[0]);
+  } catch (err) { next(err); }
+};
+
+const getFicha = async (req, res, next) => {
+  try {
+    if (req.user.rol === 'terapeuta') {
+      const [pac] = await db.query('SELECT id_sucursal FROM paciente WHERE id_paciente = ?', [req.params.id]);
+      if (!pac.length) return res.status(404).json({ error: 'Ficha no encontrada' });
+      const [asig] = await db.query(
+        `SELECT 1 FROM terapeuta_sucursal
+         WHERE id_terapeuta = ? AND id_sucursal = ?
+           AND (fecha_fin IS NULL OR fecha_fin > CURDATE())`,
+        [req.user.id_terapeuta, pac[0].id_sucursal]
+      );
+      if (!asig.length) return res.status(403).json({ error: 'Acceso denegado' });
+    }
+    const [rows] = await db.query(
+      'SELECT * FROM ficha_clinica WHERE id_paciente = ?',
+      [req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: 'Ficha no encontrada' });
+    const ficha = rows[0];
+    const [consumos] = await db.query('SELECT * FROM ficha_consumo WHERE id_ficha = ?', [ficha.id_ficha]);
+    const [tratamientos] = await db.query('SELECT * FROM tratamiento_anterior WHERE id_ficha = ?', [ficha.id_ficha]);
+    ficha.consumos = consumos;
+    ficha.tratamientos = tratamientos;
+    res.json(ficha);
+  } catch (err) { next(err); }
+};
+
+const getSesiones = async (req, res, next) => {
+  try {
+    if (req.user.rol === 'terapeuta') {
+      const [pac] = await db.query('SELECT id_sucursal FROM paciente WHERE id_paciente = ?', [req.params.id]);
+      if (!pac.length) return res.status(404).json({ error: 'Paciente no encontrado' });
+      const [asig] = await db.query(
+        `SELECT 1 FROM terapeuta_sucursal
+         WHERE id_terapeuta = ? AND id_sucursal = ?
+           AND (fecha_fin IS NULL OR fecha_fin > CURDATE())`,
+        [req.user.id_terapeuta, pac[0].id_sucursal]
+      );
+      if (!asig.length) return res.status(403).json({ error: 'Acceso denegado' });
+    }
+    const [rows] = await db.query(`
+      SELECT ses.*, p.nombres, p.apellidos, s.nombre AS nombre_sucursal
+      FROM sesion ses
+      JOIN ficha_clinica fc ON fc.id_ficha    = ses.id_ficha
+      JOIN terapeuta t      ON t.id_terapeuta = ses.id_terapeuta
+      JOIN persona p        ON p.id_persona   = t.id_persona
+      JOIN sucursal s       ON s.id_sucursal  = ses.id_sucursal
+      WHERE fc.id_paciente = ?
+      ORDER BY ses.fecha DESC
+    `, [req.params.id]);
+    res.json(rows);
+  } catch (err) { next(err); }
+};
+
+// Crea persona + paciente en una transacción
+const create = async (req, res, next) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    const {
+      rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad,
+      id_sucursal, prevision,
+      estado_civil, numero_hijos, escolaridad, profesion_ocupacion, comuna, empresa_nombre,
+      apoderado_nombre, apoderado_parentesco, apoderado_edad, apoderado_direccion, apoderado_telefono,
+      contacto_emergencia_nombre, contacto_emergencia_parentesco, contacto_emergencia_telefono, contacto_emergencia_email,
+      contacto2_nombre, contacto2_parentesco, contacto2_telefono, contacto2_email,
+    } = req.body;
+
+    const [personaResult] = await conn.query(
+      `INSERT INTO persona (rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad || null]
+    );
+    const id_persona = personaResult.insertId;
+
+    const [pacienteResult] = await conn.query(
+      `INSERT INTO paciente (
+        id_persona, id_sucursal, prevision,
+        estado_civil, numero_hijos, escolaridad, profesion_ocupacion, comuna, empresa_nombre,
+        apoderado_nombre, apoderado_parentesco, apoderado_edad, apoderado_direccion, apoderado_telefono,
+        contacto_emergencia_nombre, contacto_emergencia_parentesco, contacto_emergencia_telefono, contacto_emergencia_email,
+        contacto2_nombre, contacto2_parentesco, contacto2_telefono, contacto2_email
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id_persona, id_sucursal, prevision,
+        estado_civil || null, numero_hijos ?? null, escolaridad || null, profesion_ocupacion || null, comuna || null, empresa_nombre || null,
+        apoderado_nombre || null, apoderado_parentesco || null, apoderado_edad ?? null, apoderado_direccion || null, apoderado_telefono || null,
+        contacto_emergencia_nombre, contacto_emergencia_parentesco || null, contacto_emergencia_telefono, contacto_emergencia_email || null,
+        contacto2_nombre || null, contacto2_parentesco || null, contacto2_telefono || null, contacto2_email || null,
+      ]
+    );
+
+    await conn.commit();
+    res.status(201).json({ id_persona, id_paciente: pacienteResult.insertId });
+  } catch (err) {
+    await conn.rollback();
+    next(err);
+  } finally {
+    conn.release();
+  }
+};
+
+const update = async (req, res, next) => {
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    const {
+      rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad,
+      id_sucursal, prevision, activo,
+      estado_civil, numero_hijos, escolaridad, profesion_ocupacion, comuna, empresa_nombre,
+      apoderado_nombre, apoderado_parentesco, apoderado_edad, apoderado_direccion, apoderado_telefono,
+      contacto_emergencia_nombre, contacto_emergencia_parentesco, contacto_emergencia_telefono, contacto_emergencia_email,
+      contacto2_nombre, contacto2_parentesco, contacto2_telefono, contacto2_email,
+    } = req.body;
+
+    const [pac] = await conn.query('SELECT id_persona FROM paciente WHERE id_paciente = ?', [req.params.id]);
+    if (!pac.length) { await conn.rollback(); return res.status(404).json({ error: 'Paciente no encontrado' }); }
+
+    await conn.query(
+      `UPDATE persona SET rut=?, nombres=?, apellidos=?, fecha_nacimiento=?, genero=?,
+       telefono=?, email=?, direccion=?, nacionalidad=? WHERE id_persona=?`,
+      [rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad || null, pac[0].id_persona]
+    );
+
+    await conn.query(
+      `UPDATE paciente SET id_sucursal=?, prevision=?,
+        estado_civil=?, numero_hijos=?, escolaridad=?, profesion_ocupacion=?, comuna=?, empresa_nombre=?,
+        apoderado_nombre=?, apoderado_parentesco=?, apoderado_edad=?, apoderado_direccion=?, apoderado_telefono=?,
+        contacto_emergencia_nombre=?, contacto_emergencia_parentesco=?, contacto_emergencia_telefono=?, contacto_emergencia_email=?,
+        contacto2_nombre=?, contacto2_parentesco=?, contacto2_telefono=?, contacto2_email=?,
+        activo=?
+       WHERE id_paciente=?`,
+      [
+        id_sucursal, prevision,
+        estado_civil || null, numero_hijos ?? null, escolaridad || null, profesion_ocupacion || null, comuna || null, empresa_nombre || null,
+        apoderado_nombre || null, apoderado_parentesco || null, apoderado_edad ?? null, apoderado_direccion || null, apoderado_telefono || null,
+        contacto_emergencia_nombre, contacto_emergencia_parentesco || null, contacto_emergencia_telefono, contacto_emergencia_email || null,
+        contacto2_nombre || null, contacto2_parentesco || null, contacto2_telefono || null, contacto2_email || null,
+        activo, req.params.id,
+      ]
+    );
+
+    await conn.commit();
+    res.json({ message: 'Paciente actualizado' });
+  } catch (err) {
+    await conn.rollback();
+    next(err);
+  } finally {
+    conn.release();
+  }
+};
+
+const remove = async (req, res, next) => {
+  try {
+    const [result] = await db.query('DELETE FROM paciente WHERE id_paciente = ?', [req.params.id]);
+    if (!result.affectedRows) return res.status(404).json({ error: 'Paciente no encontrado' });
+    res.json({ message: 'Paciente eliminado' });
+  } catch (err) { next(err); }
+};
+
+module.exports = { getAll, getById, getFicha, getSesiones, create, update, remove };

@@ -1,0 +1,47 @@
+{
+    "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
+    "version": "1.0.0",
+    "generatedTime": 1784049115463,
+    "data": [
+        {
+            "type": "folder",
+            "name": "assets"
+        },
+        {
+            "type": "file",
+            "name": "favicon.svg",
+            "size": 9522,
+            "hash": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66"
+        },
+        {
+            "type": "file",
+            "name": "icons.svg",
+            "size": 5031,
+            "hash": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a"
+        },
+        {
+            "type": "file",
+            "name": "index.html",
+            "size": 1111,
+            "hash": "e8975a6bec510d3217a57f0faeea9d708558ef72def942d9f91adfc04ba881f9"
+        },
+        {
+            "type": "file",
+            "name": "logo.png",
+            "size": 956289,
+            "hash": "ca357e66d85e2a9e7f9dc20663d2880cf687e2cf3f89262fe74557b58e69afbb"
+        },
+        {
+            "type": "file",
+            "name": "assets/index-By6w0dXK.css",
+            "size": 32274,
+            "hash": "8e21f50895e21a511002bdcca3f6227546739a887174a189578b4db7cc374313"
+        },
+        {
+            "type": "file",
+            "name": "assets/index-CMH1jLF8.js",
+            "size": 510841,
+            "hash": "03f597164f121c19a2deaa0a8ee977d85c6d392f54fe38050ed0c842acaf8c7f"
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: kairon_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: kairon_dev
+      MYSQL_USER: kairon
+      MYSQL_PASSWORD: kairon123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./schema_mysql.sql:/docker-entrypoint-initdb.d/00_schema.sql
+      - ./scripts/migrate-responsables.sql:/docker-entrypoint-initdb.d/01_migrate-responsables.sql
+      - ./scripts/migrate-responsables-empresa.sql:/docker-entrypoint-initdb.d/02_migrate-responsables-empresa.sql
+      - ./scripts/migrate-solicitudes.sql:/docker-entrypoint-initdb.d/03_migrate-solicitudes.sql
+      - ./scripts/migrate-sesion-archivo.sql:/docker-entrypoint-initdb.d/04_migrate-sesion-archivo.sql
+      - ./scripts/migrate-sesion-insumo-fecha.sql:/docker-entrypoint-initdb.d/05_migrate-sesion-insumo-fecha.sql
+      - ./scripts/migrate-terapeuta-sucursal-constraint.sql:/docker-entrypoint-initdb.d/06_migrate-terapeuta-sucursal.sql
+      - ./scripts/migrate-contactos-emergencia.sql:/docker-entrypoint-initdb.d/07_migrate-contactos.sql
+      - ./scripts/migrate-sesion-flags.sql:/docker-entrypoint-initdb.d/08_migrate-sesion-flags.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:

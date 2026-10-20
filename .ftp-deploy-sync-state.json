@@ -1,0 +1,397 @@
+{
+    "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
+    "version": "1.0.0",
+    "generatedTime": 1784050978775,
+    "data": [
+        {
+            "type": "file",
+            "name": "AGENTS.md",
+            "size": 3566,
+            "hash": "7ea7c44c9e592e015465d4bd2943b09b3c0aa516132c5a574361c8f3b6d6a1a7"
+        },
+        {
+            "type": "file",
+            "name": "CLAUDE.md",
+            "size": 10834,
+            "hash": "563b2f72246c725f7d58d643675363b63ad7a73ecae2e156eb586f6d29c17f10"
+        },
+        {
+            "type": "file",
+            "name": "Dockerfile",
+            "size": 118,
+            "hash": "ebc757232513a10c232fc6a17af5f519d9e6ee856ea309522aece1c4ecc5841e"
+        },
+        {
+            "type": "file",
+            "name": "README.md",
+            "size": 42,
+            "hash": "7cd01b1bfd9c3407512ca3c89acbd56dd2c11b466b64c906a2f001b148687efd"
+        },
+        {
+            "type": "file",
+            "name": "docker-compose.yml",
+            "size": 1429,
+            "hash": "0e7c4276e164afc00c10a0d8c747dc5e3bd52b47cfd493054f44bb6bbef96bc3"
+        },
+        {
+            "type": "file",
+            "name": "package-lock.json",
+            "size": 60057,
+            "hash": "408c80552a77d4cbb3da4ca8e3f94590bc9c410ee19d9e1a4330d7b61976a8d4"
+        },
+        {
+            "type": "file",
+            "name": "package.json",
+            "size": 732,
+            "hash": "60db78363577fc6029d214b0c7c36610cdd8169b8ae5ae819dd2404eb38ab6b5"
+        },
+        {
+            "type": "folder",
+            "name": "public"
+        },
+        {
+            "type": "folder",
+            "name": "scripts"
+        },
+        {
+            "type": "file",
+            "name": "schema_mysql.sql",
+            "size": 14323,
+            "hash": "6e86aa42a18e17ce38d7f9edad9f85e31c618099436685e0d1b4754b0914db41"
+        },
+        {
+            "type": "folder",
+            "name": "src"
+        },
+        {
+            "type": "folder",
+            "name": "public/landing"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-contactos-emergencia.sql",
+            "size": 2238,
+            "hash": "1c6532d746b2997aede4150e8df6c0bbc334969ba243e3ef4d033d454707d5bd"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-especialidades.js",
+            "size": 1825,
+            "hash": "c336d5e3d1cd525d40e6f2680a7f5e40c35432e59669a61e1ce261b4bd0ca09a"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-ficha-trabajador.sql",
+            "size": 2333,
+            "hash": "981e1fca44f54864ff8fbfcddd43fff02332735a2adade3986c286f61b78e31d"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-responsables-empresa.sql",
+            "size": 608,
+            "hash": "40a8843e85c99dda48935ef634e77a565a172ccc7be32b5ba01f44924888caae"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-responsables.sql",
+            "size": 1391,
+            "hash": "c4d161fd1b3383614e7a5c004491edd43c5b8d08546dec9d80f86e188b8ab167"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-sesion-archivo.sql",
+            "size": 151,
+            "hash": "e4d69ce4928b869f32d81c8f87f6edbc7c59b4c1ddd2a24f03035e7d47f8cbc5"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-sesion-flags.sql",
+            "size": 340,
+            "hash": "9a0bd315909da8d5acfd40a901820c7def1ace297040a5686c9dd8baf9a318d0"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-sesion-insumo-fecha.sql",
+            "size": 87,
+            "hash": "bb6e5293f61f8fc0701e1883f9200b2b3af61cff507a758f6469c92a2c1c0ec2"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-sesion-observaciones.sql",
+            "size": 239,
+            "hash": "7d7015f8d8bab23f0072c8f391e3cba01252b14c4b08b2e634318d01a40b3a5d"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-solicitudes.sql",
+            "size": 904,
+            "hash": "305de28ab3018062eee7194c7841d09ba36837bb611b2b6d41821bdb4788d00d"
+        },
+        {
+            "type": "file",
+            "name": "scripts/migrate-terapeuta-sucursal-constraint.sql",
+            "size": 483,
+            "hash": "91d5900e65a3e5c6420d3266e90945e6ee2cc622fc393dd3f42398f096dfd5d9"
+        },
+        {
+            "type": "file",
+            "name": "scripts/seed-usuarios.js",
+            "size": 13871,
+            "hash": "c07764f36d9b744c6656c1792e7ada1f86b136d2ad67e9df7d962c718facc061"
+        },
+        {
+            "type": "file",
+            "name": "src/app.js",
+            "size": 3191,
+            "hash": "a271a06f21a64ea8aa139abebe8961a671c1208da425e7a1a98204c8ef618f62"
+        },
+        {
+            "type": "folder",
+            "name": "src/config"
+        },
+        {
+            "type": "folder",
+            "name": "src/controllers"
+        },
+        {
+            "type": "folder",
+            "name": "src/middleware"
+        },
+        {
+            "type": "folder",
+            "name": "src/routes"
+        },
+        {
+            "type": "folder",
+            "name": "src/utils"
+        },
+        {
+            "type": "file",
+            "name": "public/landing/main.js",
+            "size": 2667,
+            "hash": "f86d149ee0048d596c1ad781565bf9f91a6d0cd640712e12d1c92dadbb8ee045"
+        },
+        {
+            "type": "file",
+            "name": "public/landing/index.html",
+            "size": 34200,
+            "hash": "b1ae2f67b0fa179a2d2a258b7ffce5f69d5dab35142466b86deb319de1bbe39f"
+        },
+        {
+            "type": "file",
+            "name": "src/config/db.js",
+            "size": 645,
+            "hash": "0ba4c6e9c22482307770d72d2c14b5aff5fb8935802055946b8d91ea2de728ac"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/auth.controller.js",
+            "size": 6763,
+            "hash": "48e9f433169a706771056a2d112af9e554613aea500980b6b216edf49f96537c"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/empresa.controller.js",
+            "size": 3913,
+            "hash": "c875c161fb56abd88bd013623ce49654c93556df3b0cb5178611286c0578287b"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/fichaClinica.controller.js",
+            "size": 8747,
+            "hash": "04f9dcc285f1fdcd7438d69e80a57c5b4d6f448b38546746c8c70e10d6bdec77"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/historial.controller.js",
+            "size": 2051,
+            "hash": "f46b5b65a15a59b7579e9bce3b1c301096223618163774040965f26477b66e65"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/informe.controller.js",
+            "size": 2736,
+            "hash": "8a16ef441115333752a4c3193bbe1e13fa8b4da3aa9ef02c7ad2cc46220b498b"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/insumo.controller.js",
+            "size": 2228,
+            "hash": "093af82e63e7039525000f09746c5edf92da7263f1271d703d4b84c20e9508ba"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/paciente.controller.js",
+            "size": 10902,
+            "hash": "0455a552a0e137c31952c72bdae17b3c4b496baba73f38fa65cee3e78fa108be"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/persona.controller.js",
+            "size": 2070,
+            "hash": "b3a33d717631187b28bc09a0f2a6b6ad758d03f95c911e10d82dbdcc64cee3b7"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/postulacion.controller.js",
+            "size": 756,
+            "hash": "90247a6532f9ea6a7bf85f783d657d251204c89036ed8d6874c6c59ea5461234"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/sesion.controller.js",
+            "size": 15569,
+            "hash": "8bbab3144ac8192373e5ed5f5c2df8d2eb4a31b234796a4d717341d549776bcd"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/solicitud.controller.js",
+            "size": 5861,
+            "hash": "2d81a3dc13a38b71deb8254eefdfd071d15d8fafd7bf0425e071af9fbf239b77"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/sucursal.controller.js",
+            "size": 5356,
+            "hash": "b273555fc8e651b2105997ed833553af3407b03953473561e6d5ce35ceaed20a"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/stock.controller.js",
+            "size": 10954,
+            "hash": "a11cca8e8983a6944e9d6a57cc3f56606182c2858693fbd963845f1186ffd518"
+        },
+        {
+            "type": "file",
+            "name": "src/controllers/terapeuta.controller.js",
+            "size": 9582,
+            "hash": "4e3422510d11d29ad3cd18828d4b4c66680a3b257293d92053f5f65640cec4af"
+        },
+        {
+            "type": "file",
+            "name": "src/middleware/authenticate.js",
+            "size": 600,
+            "hash": "707cdbbf2204a1da84745068a747fabc8ccb0b105d8ecbe32fa4e1448e9c346d"
+        },
+        {
+            "type": "file",
+            "name": "src/middleware/authorize.js",
+            "size": 173,
+            "hash": "41d87c96628b3169123906bc2efb0eebaf5d4b4d082cb2fe24eabe5eb0090ad0"
+        },
+        {
+            "type": "file",
+            "name": "src/middleware/errorHandler.js",
+            "size": 947,
+            "hash": "a9b10d3a330c29c8461566061098fa3d6fd3488213ef2d1a66cca1ee096eb1eb"
+        },
+        {
+            "type": "file",
+            "name": "src/middleware/upload.js",
+            "size": 1344,
+            "hash": "1f1aa92742fe482febb71a791ac60039ed252d89444f68f20d00b657e7343c72"
+        },
+        {
+            "type": "file",
+            "name": "src/middleware/uploadCv.js",
+            "size": 708,
+            "hash": "5653c4293a1eab7b9e127ca19c97c6e8ecf3205eaa1c2a5b5fb9f22ebcb8f6d7"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/auth.routes.js",
+            "size": 1145,
+            "hash": "b053ec66445325b730bd9853b1b6c65b95f84dca810b25bfb755e13c1c07d82c"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/empresa.routes.js",
+            "size": 1078,
+            "hash": "dad0eebe62adb50cadcc4ee3182e6631cf9e515525f50b88898a0d5f39cd9075"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/fichaClinica.routes.js",
+            "size": 633,
+            "hash": "d870cba99cb3919bf6e3df2d8e56802dc9e9d21d9856ba4cf0fa84b2d7423bbf"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/historial.routes.js",
+            "size": 287,
+            "hash": "6a0d20429a3adf268622326e8bd767a10ce2bd4aefb3159ea95a6601428120d1"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/informe.routes.js",
+            "size": 558,
+            "hash": "6e06e6bee9e54c655de1796ba13e4a6882699bff57c902940218a4c6d11d09ad"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/insumo.routes.js",
+            "size": 638,
+            "hash": "7a166e5284c670966e135dfe58eb6b8c87f641b3b1dbb5fb19a5a7ed026a55a1"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/paciente.routes.js",
+            "size": 699,
+            "hash": "adac975fd9b57261c5ac4ddeb54d37c94c99b4b0dda672936d1869975dafd4f7"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/persona.routes.js",
+            "size": 548,
+            "hash": "3a1175fb763b64eea5ffec2ba3f38b915e369a2c72f8d3e95ee936e762bea83c"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/postulacion.routes.js",
+            "size": 581,
+            "hash": "4b87d0e7c9e6eff03458e36e045823a1dd7bbc5fb789d38b845f514958e77362"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/solicitud.routes.js",
+            "size": 567,
+            "hash": "4d83fcfd26f0cff65d651629bf2a08c43349bf43ef1b0822f795fb79c0e558c9"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/stock.routes.js",
+            "size": 1867,
+            "hash": "12a72a211578ce2866cdb8aeebd308288e44d69b983ebafb5473f21a468b5a92"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/sesion.routes.js",
+            "size": 1172,
+            "hash": "de036b1d2b36ccbb522b3134ff776ab419b2be54399c514457d302d1797a517e"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/sucursal.routes.js",
+            "size": 1148,
+            "hash": "2758f1469b6c2ec2343f0c29e20caf5b07cab8564f3e4abdaac8a4f2a3b38610"
+        },
+        {
+            "type": "file",
+            "name": "src/routes/terapeuta.routes.js",
+            "size": 1167,
+            "hash": "2286b8c8c6e55d6725d41b6a0c7d0e2d7f28df89fea942ba0e1edaefef21a636"
+        },
+        {
+            "type": "file",
+            "name": "src/utils/access.js",
+            "size": 1462,
+            "hash": "26eff39ec14a9c95aa4cde1c7ccf35dc23a4cf76d7d53b3a64ad117d6f4dc056"
+        },
+        {
+            "type": "file",
+            "name": "src/utils/mailer.js",
+            "size": 1189,
+            "hash": "2468c17ed9e5fa794c96bbb19485cdff6631d7bd0b0590c6e37a4d380b2d10d0"
+        }
+    ]
+}
