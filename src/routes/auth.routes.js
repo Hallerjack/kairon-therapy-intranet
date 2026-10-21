@@ -13,7 +13,7 @@ const loginLimiter = rateLimit({
   message: { error: 'Demasiados intentos de inicio de sesión. Intenta más tarde.' },
 });
 
-router.post('/login', ctrl.login);
+router.post('/login', loginLimiter, ctrl.login);
 router.post('/logout', ctrl.logout);
 router.get('/me', authenticate, ctrl.me);
 
