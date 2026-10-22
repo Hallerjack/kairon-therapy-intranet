@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { CAMPOS_PERSONA, buildSet } = require('../utils/sql');
 
 const getAll = async (req, res, next) => {
   try {
@@ -132,31 +133,34 @@ const create = async (req, res, next) => {
   }
 };
 
+const CAMPOS_TERAPEUTA = ['especialidad_1', 'especialidad_2', 'especialidad_3', 'registro_profesional', 'activo'];
+const TERAPEUTA_NULLABLES = ['nacionalidad', 'especialidad_2', 'especialidad_3'];
+
+// Actualiza solo los campos enviados (persona + terapeuta) en una transacción
 const update = async (req, res, next) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
 
-    const {
-      rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad,
-      especialidad_1, especialidad_2, especialidad_3, registro_profesional, activo
-    } = req.body;
+    const { especialidad_1 } = req.body;
+    if (especialidad_1 !== undefined && !especialidad_1) { await conn.rollback(); return res.status(400).json({ error: 'especialidad_1 no puede estar vacía' }); }
+
+    const persona = buildSet(req.body, CAMPOS_PERSONA, TERAPEUTA_NULLABLES);
+    const terapeuta = buildSet(req.body, CAMPOS_TERAPEUTA, TERAPEUTA_NULLABLES);
+    if (!persona.cols.length && !terapeuta.cols.length) {
+      await conn.rollback();
+      return res.status(400).json({ error: 'No hay campos para actualizar' });
+    }
 
     const [ter] = await conn.query('SELECT id_persona FROM terapeuta WHERE id_terapeuta = ?', [req.params.id]);
     if (!ter.length) { await conn.rollback(); return res.status(404).json({ error: 'Terapeuta no encontrado' }); }
 
-    if (especialidad_1 !== undefined && !especialidad_1) { await conn.rollback(); return res.status(400).json({ error: 'especialidad_1 no puede estar vacía' }); }
-
-    await conn.query(
-      `UPDATE persona SET rut=?, nombres=?, apellidos=?, fecha_nacimiento=?, genero=?,
-       telefono=?, email=?, direccion=?, nacionalidad=? WHERE id_persona=?`,
-      [rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad || null, ter[0].id_persona]
-    );
-
-    await conn.query(
-      'UPDATE terapeuta SET especialidad_1=?, especialidad_2=?, especialidad_3=?, registro_profesional=?, activo=? WHERE id_terapeuta=?',
-      [especialidad_1, especialidad_2 || null, especialidad_3 || null, registro_profesional, activo, req.params.id]
-    );
+    if (persona.cols.length) {
+      await conn.query(`UPDATE persona SET ${persona.sql} WHERE id_persona=?`, [...persona.params, ter[0].id_persona]);
+    }
+    if (terapeuta.cols.length) {
+      await conn.query(`UPDATE terapeuta SET ${terapeuta.sql} WHERE id_terapeuta=?`, [...terapeuta.params, req.params.id]);
+    }
 
     await conn.commit();
     res.json({ message: 'Terapeuta actualizado' });

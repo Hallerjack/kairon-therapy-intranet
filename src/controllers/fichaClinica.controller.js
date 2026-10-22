@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const { terapeutaEnSucursal, sucursalDeFicha, sucursalDePaciente } = require('../utils/access');
+const { buildSet } = require('../utils/sql');
 
 const CAMPOS_AUDITABLES = [
   'motivo_consulta', 'antecedentes', 'alergias',
@@ -130,18 +131,18 @@ const create = async (req, res, next) => {
   }
 };
 
-// Actualiza ficha y registra historial para campos modificados
+// Normaliza para comparar: '' y null son "vacío", y 15 vs "15" no cuenta como cambio
+const normalizar = (v) => (v == null || v === '' ? null : String(v));
+
+// Actualiza solo los campos enviados y registra historial para los que cambiaron
 const update = async (req, res, next) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
 
-    const {
-      id_terapeuta, id_sesion, motivo_consulta, antecedentes, alergias, medicamentos, diagnostico_actual, observaciones,
-      enfermedades_mentales, enfermedades_biologicas, edad_inicio_consumo, consumo_observaciones,
-      historial_familiar, indicacion_intervencion, modalidad,
-      consumos, tratamientos,
-    } = req.body;
+    const { id_sesion, consumos, tratamientos } = req.body;
+    // Un terapeuta siempre queda como autor del cambio; solo el admin indica a nombre de quién
+    const id_terapeuta = req.user.rol === 'terapeuta' ? req.user.id_terapeuta : req.body.id_terapeuta;
 
     if (!id_terapeuta) {
       await conn.rollback();
@@ -158,25 +159,15 @@ const update = async (req, res, next) => {
     }
 
     const ficha = fichas[0];
-    const nuevos = {
-      motivo_consulta, antecedentes, alergias, medicamentos, diagnostico_actual, observaciones,
-      enfermedades_mentales, enfermedades_biologicas, edad_inicio_consumo, consumo_observaciones,
-      historial_familiar, indicacion_intervencion, modalidad,
-    };
+    const { cols, sql, params } = buildSet(req.body, CAMPOS_AUDITABLES, CAMPOS_AUDITABLES);
 
-    await conn.query(
-      `UPDATE ficha_clinica SET motivo_consulta=?, antecedentes=?, alergias=?,
-       medicamentos=?, diagnostico_actual=?, observaciones=?,
-       enfermedades_mentales=?, enfermedades_biologicas=?, edad_inicio_consumo=?, consumo_observaciones=?,
-       historial_familiar=?, indicacion_intervencion=?, modalidad=? WHERE id_ficha=?`,
-      [motivo_consulta, antecedentes, alergias, medicamentos, diagnostico_actual, observaciones,
-       enfermedades_mentales || null, enfermedades_biologicas || null, edad_inicio_consumo || null, consumo_observaciones || null,
-       historial_familiar || null, indicacion_intervencion || null, modalidad || null, req.params.id]
-    );
+    if (cols.length) {
+      await conn.query(`UPDATE ficha_clinica SET ${sql} WHERE id_ficha=?`, [...params, req.params.id]);
+    }
 
-    for (const campo of CAMPOS_AUDITABLES) {
-      const anterior = ficha[campo] ?? null;
-      const nuevo = nuevos[campo] ?? null;
+    for (const [i, campo] of cols.entries()) {
+      const anterior = normalizar(ficha[campo]);
+      const nuevo = normalizar(params[i]);
       if (anterior !== nuevo) {
         await conn.query(
           `INSERT INTO historial_atencion (id_ficha, id_sesion, id_terapeuta, campo_modificado, valor_anterior, valor_nuevo)

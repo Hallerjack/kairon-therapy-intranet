@@ -173,7 +173,7 @@ Authorization: Bearer <token>   ← header en todas las rutas protegidas
 |---|---|---|---|---|---|
 | `/api/empresas` | admin | admin | admin | admin | admin |
 | `/api/sucursales` | admin | admin | admin | admin | admin |
-| `/api/personas` | auth | auth | admin | admin | admin |
+| `/api/personas` | admin | admin | admin | admin | admin |
 | `/api/pacientes` | auth | auth | admin | admin | admin |
 | `/api/terapeutas` | admin | admin | admin | admin | admin |
 | `/api/insumos` | admin | admin | admin | admin | admin |

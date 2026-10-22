@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { CAMPOS_PERSONA, buildSet } = require('../utils/sql');
 
 const getAll = async (req, res, next) => {
   try {
@@ -172,46 +173,42 @@ const create = async (req, res, next) => {
   }
 };
 
+const CAMPOS_PACIENTE = [
+  'id_sucursal', 'prevision', 'activo',
+  'estado_civil', 'numero_hijos', 'escolaridad', 'profesion_ocupacion', 'comuna', 'empresa_nombre',
+  'apoderado_nombre', 'apoderado_parentesco', 'apoderado_edad', 'apoderado_direccion', 'apoderado_telefono',
+  'contacto_emergencia_nombre', 'contacto_emergencia_parentesco', 'contacto_emergencia_telefono', 'contacto_emergencia_email',
+  'contacto2_nombre', 'contacto2_parentesco', 'contacto2_telefono', 'contacto2_email',
+];
+const PACIENTE_NULLABLES = [
+  'nacionalidad', 'estado_civil', 'escolaridad', 'profesion_ocupacion', 'comuna', 'empresa_nombre',
+  'apoderado_nombre', 'apoderado_parentesco', 'apoderado_direccion', 'apoderado_telefono',
+  'contacto_emergencia_parentesco', 'contacto_emergencia_email',
+  'contacto2_nombre', 'contacto2_parentesco', 'contacto2_telefono', 'contacto2_email',
+];
+
+// Actualiza solo los campos enviados (persona + paciente) en una transacción
 const update = async (req, res, next) => {
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
 
-    const {
-      rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad,
-      id_sucursal, prevision, activo,
-      estado_civil, numero_hijos, escolaridad, profesion_ocupacion, comuna, empresa_nombre,
-      apoderado_nombre, apoderado_parentesco, apoderado_edad, apoderado_direccion, apoderado_telefono,
-      contacto_emergencia_nombre, contacto_emergencia_parentesco, contacto_emergencia_telefono, contacto_emergencia_email,
-      contacto2_nombre, contacto2_parentesco, contacto2_telefono, contacto2_email,
-    } = req.body;
+    const persona = buildSet(req.body, CAMPOS_PERSONA, PACIENTE_NULLABLES);
+    const paciente = buildSet(req.body, CAMPOS_PACIENTE, PACIENTE_NULLABLES);
+    if (!persona.cols.length && !paciente.cols.length) {
+      await conn.rollback();
+      return res.status(400).json({ error: 'No hay campos para actualizar' });
+    }
 
     const [pac] = await conn.query('SELECT id_persona FROM paciente WHERE id_paciente = ?', [req.params.id]);
     if (!pac.length) { await conn.rollback(); return res.status(404).json({ error: 'Paciente no encontrado' }); }
 
-    await conn.query(
-      `UPDATE persona SET rut=?, nombres=?, apellidos=?, fecha_nacimiento=?, genero=?,
-       telefono=?, email=?, direccion=?, nacionalidad=? WHERE id_persona=?`,
-      [rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, nacionalidad || null, pac[0].id_persona]
-    );
-
-    await conn.query(
-      `UPDATE paciente SET id_sucursal=?, prevision=?,
-        estado_civil=?, numero_hijos=?, escolaridad=?, profesion_ocupacion=?, comuna=?, empresa_nombre=?,
-        apoderado_nombre=?, apoderado_parentesco=?, apoderado_edad=?, apoderado_direccion=?, apoderado_telefono=?,
-        contacto_emergencia_nombre=?, contacto_emergencia_parentesco=?, contacto_emergencia_telefono=?, contacto_emergencia_email=?,
-        contacto2_nombre=?, contacto2_parentesco=?, contacto2_telefono=?, contacto2_email=?,
-        activo=?
-       WHERE id_paciente=?`,
-      [
-        id_sucursal, prevision,
-        estado_civil || null, numero_hijos ?? null, escolaridad || null, profesion_ocupacion || null, comuna || null, empresa_nombre || null,
-        apoderado_nombre || null, apoderado_parentesco || null, apoderado_edad ?? null, apoderado_direccion || null, apoderado_telefono || null,
-        contacto_emergencia_nombre, contacto_emergencia_parentesco || null, contacto_emergencia_telefono, contacto_emergencia_email || null,
-        contacto2_nombre || null, contacto2_parentesco || null, contacto2_telefono || null, contacto2_email || null,
-        activo, req.params.id,
-      ]
-    );
+    if (persona.cols.length) {
+      await conn.query(`UPDATE persona SET ${persona.sql} WHERE id_persona=?`, [...persona.params, pac[0].id_persona]);
+    }
+    if (paciente.cols.length) {
+      await conn.query(`UPDATE paciente SET ${paciente.sql} WHERE id_paciente=?`, [...paciente.params, req.params.id]);
+    }
 
     await conn.commit();
     res.json({ message: 'Paciente actualizado' });

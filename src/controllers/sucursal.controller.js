@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { terapeutaEnSucursal } = require('../utils/access');
 
 const getAll = async (req, res, next) => {
   try {
@@ -133,6 +134,10 @@ const removeResponsable = async (req, res, next) => {
 
 const getPacientes = async (req, res, next) => {
   try {
+    if (req.user.rol === 'terapeuta' &&
+        !(await terapeutaEnSucursal(req.user.id_terapeuta, req.params.id))) {
+      return res.status(403).json({ error: 'Acceso denegado' });
+    }
     const [rows] = await db.query(`
       SELECT p.id_paciente, per.rut, per.nombres, per.apellidos,
              per.email, per.telefono

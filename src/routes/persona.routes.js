@@ -5,8 +5,9 @@ const authorize = require('../middleware/authorize');
 
 const adminOnly = [authenticate, authorize('administrador')];
 
-router.get('/',    authenticate, ctrl.getAll);
-router.get('/:id', authenticate, ctrl.getById);
+// Datos personales de todo el sistema (RUT, contacto): solo admin
+router.get('/',    ...adminOnly, ctrl.getAll);
+router.get('/:id', ...adminOnly, ctrl.getById);
 router.post('/',   ...adminOnly,  ctrl.create);
 router.put('/:id', ...adminOnly,  ctrl.update);
 router.delete('/:id', ...adminOnly, ctrl.remove);

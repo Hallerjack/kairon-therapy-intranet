@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { CAMPOS_PERSONA, buildSet } = require('../utils/sql');
 
 const getAll = async (req, res, next) => {
   try {
@@ -27,14 +28,12 @@ const create = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
+// Actualiza solo los campos enviados
 const update = async (req, res, next) => {
   try {
-    const { rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion } = req.body;
-    const [result] = await db.query(
-      `UPDATE persona SET rut=?, nombres=?, apellidos=?, fecha_nacimiento=?, genero=?,
-       telefono=?, email=?, direccion=? WHERE id_persona=?`,
-      [rut, nombres, apellidos, fecha_nacimiento, genero, telefono, email, direccion, req.params.id]
-    );
+    const { cols, sql, params } = buildSet(req.body, CAMPOS_PERSONA, ['nacionalidad']);
+    if (!cols.length) return res.status(400).json({ error: 'No hay campos para actualizar' });
+    const [result] = await db.query(`UPDATE persona SET ${sql} WHERE id_persona=?`, [...params, req.params.id]);
     if (!result.affectedRows) return res.status(404).json({ error: 'Persona no encontrada' });
     res.json({ message: 'Persona actualizada' });
   } catch (err) { next(err); }

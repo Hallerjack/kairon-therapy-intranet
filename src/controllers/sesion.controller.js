@@ -1,7 +1,20 @@
 const db = require('../config/db');
 const path = require('path');
 const fs = require('fs');
-const { terapeutaEnSucursal, sucursalDeSesion } = require('../utils/access');
+const { terapeutaEnSucursal, sucursalDeSesion, sucursalDeFicha } = require('../utils/access');
+
+// Terapeuta: solo gestiona (edita, borra, insumos, archivo) sus propias sesiones
+// en sucursales donde sigue asignado. Devuelve null si puede, o { status, error }.
+async function verificarGestion(req, id_sesion) {
+  if (req.user.rol !== 'terapeuta') return null;
+  const [rows] = await db.query('SELECT id_terapeuta, id_sucursal FROM sesion WHERE id_sesion = ?', [id_sesion]);
+  if (!rows.length) return { status: 404, error: 'Sesión no encontrada' };
+  if (rows[0].id_terapeuta !== req.user.id_terapeuta ||
+      !(await terapeutaEnSucursal(req.user.id_terapeuta, rows[0].id_sucursal))) {
+    return { status: 403, error: 'Solo puedes gestionar tus propias sesiones' };
+  }
+  return null;
+}
 
 const getAll = async (req, res, next) => {
   try {
@@ -90,13 +103,19 @@ const getInsumos = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const { id_ficha, id_terapeuta, id_sucursal, fecha, duracion_minutos, estado, notas_sesion,
+    const { id_ficha, id_sucursal, fecha, duracion_minutos, estado, notas_sesion,
             observaciones, tipo_observacion, nuevas_indicaciones,
             consumos_adicciones, ley_karin, psicosocial, prevencion_suicidio, tipo_intervencion } = req.body;
+    // Un terapeuta siempre crea sesiones a su nombre; solo el admin elige el terapeuta
+    const id_terapeuta = req.user.rol === 'terapeuta' ? req.user.id_terapeuta : req.body.id_terapeuta;
 
-    if (req.user.rol === 'terapeuta' &&
-        !(await terapeutaEnSucursal(req.user.id_terapeuta, id_sucursal))) {
-      return res.status(403).json({ error: 'No tienes asignación en esta sucursal' });
+    if (req.user.rol === 'terapeuta') {
+      if (!(await terapeutaEnSucursal(req.user.id_terapeuta, id_sucursal))) {
+        return res.status(403).json({ error: 'No tienes asignación en esta sucursal' });
+      }
+      if (!(await terapeutaEnSucursal(req.user.id_terapeuta, await sucursalDeFicha(id_ficha)))) {
+        return res.status(403).json({ error: 'No tienes acceso a esta ficha' });
+      }
     }
 
     // Un paciente con alta no admite más sesiones
@@ -124,14 +143,14 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    if (req.user.rol === 'terapeuta') {
-      const suc = await sucursalDeSesion(req.params.id);
-      if (suc === null) return res.status(404).json({ error: 'Sesión no encontrada' });
-      if (!(await terapeutaEnSucursal(req.user.id_terapeuta, suc))) {
-        return res.status(403).json({ error: 'Acceso denegado' });
-      }
+    const denegado = await verificarGestion(req, req.params.id);
+    if (denegado) return res.status(denegado.status).json({ error: denegado.error });
+    if (req.user.rol === 'terapeuta' && req.body.id_sucursal !== undefined &&
+        !(await terapeutaEnSucursal(req.user.id_terapeuta, req.body.id_sucursal))) {
+      return res.status(403).json({ error: 'No tienes asignación en esta sucursal' });
     }
-    const allowed = ['id_terapeuta', 'id_sucursal', 'fecha', 'duracion_minutos', 'estado', 'notas_sesion',
+    // El terapeuta no puede reasignar la sesión a otro terapeuta
+    const allowed = [...(req.user.rol === 'terapeuta' ? [] : ['id_terapeuta']), 'id_sucursal', 'fecha', 'duracion_minutos', 'estado', 'notas_sesion',
                      'observaciones', 'tipo_observacion', 'nuevas_indicaciones',
                      'consumos_adicciones', 'ley_karin', 'psicosocial', 'prevencion_suicidio', 'tipo_intervencion'];
     const fields = allowed.filter(f => req.body[f] !== undefined);
@@ -164,27 +183,33 @@ const update = async (req, res, next) => {
 const addInsumo = async (req, res, next) => {
   const conn = await db.getConnection();
   try {
+    const denegado = await verificarGestion(req, req.params.id);
+    if (denegado) return res.status(denegado.status).json({ error: denegado.error });
+
+    const { id_stock } = req.body;
+    const cantidad_usada = Number(req.body.cantidad_usada);
+    if (!id_stock || !(cantidad_usada > 0)) {
+      return res.status(400).json({ error: 'id_stock y cantidad_usada (mayor a 0) son requeridos' });
+    }
+
     await conn.beginTransaction();
 
-    if (req.user.rol === 'terapeuta') {
-      const suc = await sucursalDeSesion(req.params.id);
-      if (suc === null) { await conn.rollback(); return res.status(404).json({ error: 'Sesión no encontrada' }); }
-      if (!(await terapeutaEnSucursal(req.user.id_terapeuta, suc))) {
-        await conn.rollback();
-        return res.status(403).json({ error: 'Acceso denegado' });
-      }
-    }
+    const [sesiones] = await conn.query('SELECT id_sucursal FROM sesion WHERE id_sesion = ?', [req.params.id]);
+    if (!sesiones.length) { await conn.rollback(); return res.status(404).json({ error: 'Sesión no encontrada' }); }
 
-    const { id_stock, cantidad_usada } = req.body;
-    if (!id_stock || !cantidad_usada) {
-      await conn.rollback();
-      return res.status(400).json({ error: 'id_stock y cantidad_usada son requeridos' });
-    }
-
-    const [stocks] = await conn.query('SELECT * FROM stock_insumo WHERE id_stock = ?', [id_stock]);
+    // FOR UPDATE: bloquea la fila para que dos usos simultáneos no dejen el stock negativo
+    const [stocks] = await conn.query(
+      'SELECT id_sucursal, cantidad FROM stock_insumo WHERE id_stock = ? FOR UPDATE', [id_stock]
+    );
     if (!stocks.length) { await conn.rollback(); return res.status(404).json({ error: 'Stock no encontrado' }); }
 
-    if (stocks[0].cantidad < cantidad_usada) {
+    if (stocks[0].id_sucursal !== sesiones[0].id_sucursal) {
+      await conn.rollback();
+      return res.status(400).json({ error: 'El insumo no pertenece a la sucursal de la sesión' });
+    }
+
+    // DECIMAL llega como string desde mysql2
+    if (Number(stocks[0].cantidad) < cantidad_usada) {
       await conn.rollback();
       return res.status(400).json({ error: 'Stock insuficiente', disponible: stocks[0].cantidad });
     }
@@ -217,12 +242,10 @@ const removeInsumo = async (req, res, next) => {
     const [uso] = await conn.query('SELECT * FROM sesion_insumo WHERE id = ?', [req.params.id_uso]);
     if (!uso.length) { await conn.rollback(); return res.status(404).json({ error: 'Registro no encontrado' }); }
 
-    if (req.user.rol === 'terapeuta') {
-      const suc = await sucursalDeSesion(uso[0].id_sesion);
-      if (!(await terapeutaEnSucursal(req.user.id_terapeuta, suc))) {
-        await conn.rollback();
-        return res.status(403).json({ error: 'Acceso denegado' });
-      }
+    const denegado = await verificarGestion(req, uso[0].id_sesion);
+    if (denegado) {
+      await conn.rollback();
+      return res.status(denegado.status).json({ error: denegado.error });
     }
 
     // Devuelve al stock
@@ -245,13 +268,8 @@ const removeInsumo = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    if (req.user.rol === 'terapeuta') {
-      const suc = await sucursalDeSesion(req.params.id);
-      if (suc === null) return res.status(404).json({ error: 'Sesión no encontrada' });
-      if (!(await terapeutaEnSucursal(req.user.id_terapeuta, suc))) {
-        return res.status(403).json({ error: 'Acceso denegado' });
-      }
-    }
+    const denegado = await verificarGestion(req, req.params.id);
+    if (denegado) return res.status(denegado.status).json({ error: denegado.error });
     const [result] = await db.query('DELETE FROM sesion WHERE id_sesion = ?', [req.params.id]);
     if (!result.affectedRows) return res.status(404).json({ error: 'Sesión no encontrada' });
     res.json({ message: 'Sesión eliminada' });
@@ -294,12 +312,10 @@ const uploadArchivo = async (req, res, next) => {
     if (!req.file) return res.status(400).json({ error: 'No se recibió ningún archivo' });
 
     const { id } = req.params;
-    if (req.user.rol === 'terapeuta') {
-      const suc = await sucursalDeSesion(id);
-      if (suc === null || !(await terapeutaEnSucursal(req.user.id_terapeuta, suc))) {
-        fs.unlinkSync(req.file.path);
-        return res.status(suc === null ? 404 : 403).json({ error: suc === null ? 'Sesión no encontrada' : 'Acceso denegado' });
-      }
+    const denegado = await verificarGestion(req, id);
+    if (denegado) {
+      fs.unlinkSync(req.file.path);
+      return res.status(denegado.status).json({ error: denegado.error });
     }
     const [rows] = await db.query('SELECT archivo_path FROM sesion WHERE id_sesion = ?', [id]);
     if (!rows.length) {
@@ -348,13 +364,8 @@ const downloadArchivo = async (req, res, next) => {
 
 const deleteArchivo = async (req, res, next) => {
   try {
-    if (req.user.rol === 'terapeuta') {
-      const suc = await sucursalDeSesion(req.params.id);
-      if (suc === null) return res.status(404).json({ error: 'Sesión no encontrada' });
-      if (!(await terapeutaEnSucursal(req.user.id_terapeuta, suc))) {
-        return res.status(403).json({ error: 'Acceso denegado' });
-      }
-    }
+    const denegado = await verificarGestion(req, req.params.id);
+    if (denegado) return res.status(denegado.status).json({ error: denegado.error });
     const [rows] = await db.query(
       'SELECT archivo_path FROM sesion WHERE id_sesion = ?',
       [req.params.id]
